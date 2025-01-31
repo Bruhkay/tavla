@@ -12,6 +12,8 @@ bool isGameFinished = false;
 bool firstPlayer = true;
 int firstPlayersHand = 0;
 int secondPlayersHand = 0;
+bool firstPlayerReady = false;
+bool secondPlayerReady = false;
 
 int main() {
     initializeGame(n);
@@ -28,6 +30,7 @@ void gameLoop(int *n) {
     int movement;
     int movementAmount;
     bool trueStone = false;
+
     for (int i = 0; i < 24; i++) {
         if (n[i] > 0) {
             isGameOver1 = false;
@@ -69,42 +72,85 @@ void gameLoop(int *n) {
                 coef = 2;
             }
             for (int l = 0; l < coef *2 ; l++) {
+                bool readyO = true;
+                bool readyX = true;
+                for (int i = 0; i < 24; i++) {
+                    if (i > 5 && n[i] > 0) {
+                        readyO = false;
+                    }
+                    if (i < 17 && n[i] < 0) {
+                        readyX = false;
+                    }
+                }
+                if (readyO && firstPlayersHand!=0)
+                    firstPlayerReady = true;
+                if (readyX && secondPlayersHand!=0)
+                    secondPlayerReady = true;
                 do {
-                    cout << "Enter the movement: " << endl;
+                    cout << "Enter the movement: (to call from stack)" << endl;
+                    if (firstPlayersHand != 0)
+                        cout << "Warning! There is " << firstPlayersHand<< " stone. In the stack."<< endl;
+                    if (firstPlayerReady)
+                        cout << "Ready!!!"<< endl;
+                    else
+                        cout << "not Ready!!!" << endl;
+
                     cin>>movement;
-                    cout << "Enter the movement amount: " << endl;
+                    cout << "Enter the movements amount: (to abort press -1)" << endl;
                     cin>>movementAmount;
-                    if (movement >= 0 && movement< 24 && n[movement] > 0 && movementAmount>0&&
+                    if ((firstPlayersHand!=0 && n[24-movementAmount]>=-1 && movement == -1) ||
+                        firstPlayersHand == 0 && movement >= 0 && movement< 24 &&
+                        n[movement] > 0 && movementAmount>0&&
                         movement >= movementAmount && n[movement-movementAmount] >= -1 &&
-                        (movementAmount == dice1 || movementAmount == dice2)) {
+                        (movementAmount == dice1 || movementAmount == dice2) ||
+                        (firstPlayerReady && movement >= 0 && movement< 6 &&
+                        n[movement] > 0 && movementAmount>0 &&
+                        (movementAmount == dice1 || movementAmount == dice2))) {
                         trueStone = true;
                         }
                     else {
                         cout << "Invalid input." << endl;
                     }
-                }while (!trueStone);
-                n[movement]--;
-                if (n[movement - movementAmount] == -1) {
-                    secondPlayersHand++;
-                    n[movement - movementAmount] = 1;
+                }while (!trueStone&& movementAmount !=-1);
+
+                if (movementAmount != -1) {
+                    n[movement]--;
+                    if (firstPlayersHand == 0 && n[movement - movementAmount] == -1) {
+                        secondPlayersHand++;
+                        n[movement - movementAmount] = 1;
+                    }
+                    else if (movement != -1) {
+                        n[movement - movementAmount]++;
+                    }
+                    else if (movement == -1 && firstPlayersHand != 0) {
+                        if (n[24-movementAmount] == -1) {
+                            secondPlayersHand++;
+                            n[24- movementAmount] = 1;
+                            firstPlayersHand--;
+                        }
+                        else {
+                            n[24- movementAmount]++;
+                            firstPlayersHand--;
+                        }
+                    }
+                    else if (movementAmount > movement) {
+                        n[movement]--;
+                    }
+
+                    if (dice1 == movementAmount && dice1 != dice2)
+                        dice1 = -1;
+                    else if (dice2 == movementAmount && dice1 != dice2)
+                        dice2 = -1;
+
+                    displayGame(n);
+
+                    movement = -2;
+                    movementAmount = -2;
+                    trueStone = false;
                 }
-                else {
-                    n[movement - movementAmount]++;
-                }
-
-                if (dice1 == movementAmount && dice1 != dice2)
-                    dice1 = -1;
-                else if (dice2 == movementAmount && dice1 != dice2)
-                    dice2 = -1;
-
-                displayGame(n);
-
-                movement = -1;
-                movementAmount = -1;
-                trueStone = false;
             }
         }
-        else { //for second players turn
+        else if (!firstPlayer && !secondPlayerReady){ //for second players turn
             firstPlayer = true;
             cout << "X's turn: " << endl;
             char temp = 'e';
@@ -121,40 +167,62 @@ void gameLoop(int *n) {
             }
             for (int l = 0; l < coef *2 ; l++) {
                 do {
-                    cout << "Enter the movement: " << endl;
+                    cout << "Enter the movement: (to call from stack)" << endl;
+                    if (secondPlayersHand != 0)
+                        cout << "Warning! There is " << secondPlayersHand<< " stone. In the stack."<< endl;
                     cin>>movement;
-                    cout << "Enter the movements amount: " << endl;
+                    cout << "Enter the movements amount: (to abort press -1)" << endl;
                     cin>>movementAmount;
-                    if (movement >= 0 && movement< 24 && n[movement] < 0 && movementAmount>0 &&
+                    if ((secondPlayersHand!=0 && n[movementAmount] <= 1 && movement ==-1) ||
+                        (secondPlayersHand==0 &&
+                        movement >= 0 && movement< 24 && n[movement] < 0 && movementAmount>0 &&
                         movement + movementAmount <24 && n[movement+movementAmount] <= 1 &&
-                        (movementAmount == dice1 || movementAmount == dice2)) {
+                        (movementAmount == dice1 || movementAmount == dice2))) {
                         trueStone = true;
                         }
                     else {
                         cout << "Invalid input." << endl;
                     }
-                }while (!trueStone);
-                n[movement]++;
-                if (n[movement + movementAmount] == 1) {
-                    firstPlayersHand++;
-                    n[movement + movementAmount] = -1;
+                }while (!trueStone && movementAmount !=-1);
+
+                if (movementAmount != -1) {
+                    n[movement]++;
+                    if ( secondPlayersHand == 0 && n[movement + movementAmount] == 1) {
+                        firstPlayersHand++;
+                        n[movement + movementAmount] = -1;
+                    }
+                    else if (movement != -1) {
+                        n[movement + movementAmount]--;
+                    }
+                    else if ( movement == -1 && secondPlayersHand != 0) {
+                        if (n[movementAmount] == 1) {
+                            firstPlayersHand++;
+                            n[movementAmount] = -1;
+                            secondPlayersHand--;
+                        }
+                        else {
+                            n[ movementAmount]--;
+                            secondPlayersHand--;
+                        }
+                    }
+
+                    if (dice1 == movementAmount && dice1 != dice2)
+                        dice1 = -1;
+                    else if (dice2 == movementAmount && dice1 != dice2)
+                        dice2 = -1;
+
+                    displayGame(n);
+
+                    movement = -1;
+                    movementAmount = -1;
+                    trueStone = false;
                 }
                 else {
-                    n[movement + movementAmount]--;
+                    cout << "Passed." << endl;
                 }
-
-                if (dice1 == movementAmount && dice1 != dice2)
-                    dice1 = -1;
-                else if (dice2 == movementAmount && dice1 != dice2)
-                    dice2 = -1;
-
-                displayGame(n);
-
-                movement = -1;
-                movementAmount = -1;
-                trueStone = false;
             }
         }
+
     }
 
 }
@@ -162,14 +230,15 @@ void initializeGame(int *n) {
     for (int i = 0; i < 24; i++) {
         n[i] = 0;
     }
-    n[23] = -2;
-    n[12] = -5;
-    n[7] = -3;
+    //n[23] = 2;
+    //n[12] = 5;
+    n[18] = -5;
+    n[16] = -3;
+    n[11] = -5;
+    //n[7] = 3;
+    n[7]=1;
     n[5] = 5;
-    n[18] = 5;
-    n[16] = 3;
-    n[11] = 5;
-    n[0] = 2;
+    n[0] = -2;
     firstPlayer = true;
     firstPlayersHand = 0;
     secondPlayersHand = 0;
