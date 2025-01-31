@@ -4,7 +4,8 @@
 #include <ctime>
 using namespace std;
 
-void displayGame(int *n);
+void displayGameO(int *n);
+void displayGameX(int *n);
 void initializeGame(int *n);
 void gameLoop(int * n);
 int* n = new int[24];
@@ -17,17 +18,14 @@ bool secondPlayerReady = false;
 
 int main() {
     initializeGame(n);
-    displayGame(n);
+    displayGameO(n);
     while (!isGameFinished) {
         gameLoop(n);
-        displayGame(n);
-        cout << "currenttt: " << firstPlayerReady<<endl;
     }
     return 0;
 }
 void gameLoop(int *n) {
     int movement, movementAmount;
-    bool trueStone = false;
 
     bool isGameOver1 = true, isGameOver2 = true;
     for (int i = 0; i < 24; i++) {
@@ -64,6 +62,8 @@ void gameLoop(int *n) {
     cout << "Rolled Dice: " << dice1 << " " << dice2 << endl;
 
     for (int l = 0; l < coef * 2; l++) {
+
+        bool trueStone = false;
         do {
             cout << "Enter movement (-1 to use stack): ";
             cin >> movement;
@@ -135,6 +135,18 @@ void gameLoop(int *n) {
                 n[movement + movementAmount]--;
             }
         }
+        if (firstPlayer && l+1 !=coef*2) {
+            displayGameO(n);
+        }
+        if (!firstPlayer && l+1 !=coef*2) {
+            displayGameX(n);
+        }
+    }
+    if (firstPlayer) {
+        displayGameX(n);
+    }
+    if (!firstPlayer) {
+        displayGameO(n);
     }
     firstPlayer = !firstPlayer;
 }
@@ -158,11 +170,11 @@ void initializeGame(int *n) {
     secondPlayerReady = false;
 
 }
-void displayGame(int * n) {
+void displayGameO(int * n) {
     cout << "+------------------------------------------------------+"<<endl;
     cout << "| 12  13  14  15  16  17 |BAR| 18  19  20  21  22  23  |"<<endl;
     int row =0;
-    int max;
+    int max = 0;
     for (int j = 12; j < 24; j++) {
         if (abs(n[j])> max) {
             max = abs(n[j]);
@@ -217,3 +229,67 @@ void displayGame(int * n) {
     cout << "| 11  10  9   8   7   6  |BAR| 5   4   3   2   1   0   |"<<endl;
     cout << "+------------------------------------------------------+"<<endl;
 }
+void displayGameX(int * n) {
+    cout << "+------------------------------------------------------+" << endl;
+    cout << "| 0   1   2   3   4   5  |BAR|  6   7   8   9  10  11  |" << endl;
+
+    int row = 0;
+    int max = 0;
+    for (int j = 0; j < 12; j++) {
+        if (abs(n[j]) > max) {
+            max = abs(n[j]);
+        }
+    }
+
+    do {
+        cout << "|";
+        row++;
+        for (int i = 0; i < 12; i++) {
+            if (abs(n[i]) >= row) {
+                if (n[i] < 0) {
+                    cout << " x  ";
+                } else {
+                    cout << " o  ";
+                }
+            } else {
+                cout << "    ";
+            }
+            if (i == 5) {
+                cout << "|   |";
+            }
+        }
+        cout << " |" << endl;
+    } while (row < max + 2);
+
+    max = 0;
+    for (int j = 12; j < 24; j++) {
+        if (abs(n[j]) > max) {
+            max = abs(n[j]);
+        }
+    }
+
+    row = max;
+    do {
+        cout << "|";
+        for (int i = 23; i >= 12; i--) {
+            if (abs(n[i]) >= row) {
+                if (n[i] < 0) {
+                    cout << " x  ";
+                } else {
+                    cout << " o  ";
+                }
+            } else {
+                cout << "    ";
+            }
+            if (i == 18) {
+                cout << "|   |";
+            }
+        }
+        cout << " |" << endl;
+        row--;
+    } while (row != 0);
+
+    cout << "| 23  22  21  20  19  18 |BAR| 17  16  15  14  13  12  |" << endl;
+    cout << "+------------------------------------------------------+" << endl;
+}
+
