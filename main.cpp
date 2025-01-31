@@ -153,6 +153,10 @@ void initializeGame(int *n) {
     firstPlayer = true;
     firstPlayersHand = 0;
     secondPlayersHand = 0;
+    isGameFinished = false;
+    firstPlayerReady = false;
+    secondPlayerReady = false;
+
 }
 void displayGame(int * n) {
     cout << "+------------------------------------------------------+"<<endl;
