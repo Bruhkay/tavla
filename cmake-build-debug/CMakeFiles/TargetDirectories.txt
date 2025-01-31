@@ -1,0 +1,3 @@
+/Users/burkay/Documents/Github/tavla/cmake-build-debug/CMakeFiles/tavla.dir
+/Users/burkay/Documents/Github/tavla/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/burkay/Documents/Github/tavla/cmake-build-debug/CMakeFiles/rebuild_cache.dir
