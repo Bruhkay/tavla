@@ -144,7 +144,7 @@ void gameLoop(int *n) {
             }
             else {
                 n[movement]--;
-                if (movement - movementAmount > 0) {
+                if (movement - movementAmount >= 0) {
                     n[movement - movementAmount]++;
                 }
             }
@@ -171,8 +171,8 @@ void gameLoop(int *n) {
             }
             else {
                 n[movement]++;
-                if (movement - movementAmount > 0) {
-                    n[movement - movementAmount]++;
+                if (movement + movementAmount <= 23) {
+                    n[movement + movementAmount]--;
                 }
             }
         }
