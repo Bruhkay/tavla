@@ -67,11 +67,18 @@ void gameLoop(int *n) {
         do {
             cout << "Enter movement (-1 to use stack): ";
             cin >> movement;
+            if (firstPlayer)
+                if (firstPlayersHand != 0)
+                    cout << "Warning!! There is " <<  firstPlayersHand << " at stack."<< endl;
+            if (!firstPlayer)
+                if (secondPlayersHand != 0)
+                    cout << "Warning!! There is " <<  secondPlayersHand << " at stack."<< endl;
             cout << "Enter movement amount (-1 to pass): ";
             cin >> movementAmount;
 
             if (movementAmount == -1) {
                 cout << "Passed turn." << endl;
+                firstPlayer = !firstPlayer;
                 return;
             }
 
@@ -111,12 +118,23 @@ void gameLoop(int *n) {
 
         if (firstPlayer) {
             if (!firstPlayerReady) {
-                n[movement]--;
-                if (n[movement - movementAmount] == -1) {
-                    secondPlayersHand++;
-                    n[movement - movementAmount] = 1;
-                } else {
-                    n[movement - movementAmount]++;
+                if (movement != -1) {
+                    n[movement]--;
+                    if (n[movement - movementAmount] == -1) {
+                        secondPlayersHand++;
+                        n[movement - movementAmount] = 1;
+                    } else {
+                        n[movement - movementAmount]++;
+                    }
+                }
+                else {
+                    secondPlayersHand--;
+                    if (n[24 - movementAmount] == -1) {
+                        secondPlayersHand++;
+                        n[24 - movementAmount] = 1;
+                    } else {
+                        n[24 - movementAmount]++;
+                    }
                 }
             }
             else {
@@ -125,14 +143,32 @@ void gameLoop(int *n) {
                     n[movement - movementAmount]++;
                 }
             }
-
         } else {
-            n[movement]++;
-            if (n[movement + movementAmount] == 1) {
-                firstPlayersHand++;
-                n[movement + movementAmount] = -1;
-            } else {
-                n[movement + movementAmount]--;
+            if (!secondPlayerReady) {
+                if (movement != -1) {
+                    n[movement]++;
+                    if (n[movement + movementAmount] == 1) {
+                        secondPlayersHand++;
+                        n[movement + movementAmount] = -1;
+                    } else {
+                        n[movement + movementAmount]--;
+                    }
+                }
+                else {
+                    secondPlayersHand--;
+                    if (n[movementAmount] == 1) {
+                        secondPlayersHand++;
+                        n[movementAmount] = -1;
+                    } else {
+                        n[movementAmount]--;
+                    }
+                }
+            }
+            else {
+                n[movement]++;
+                if (movement - movementAmount > 0) {
+                    n[movement - movementAmount]++;
+                }
             }
         }
         if (firstPlayer && l+1 !=coef*2) {
@@ -230,66 +266,61 @@ void displayGameO(int * n) {
     cout << "+------------------------------------------------------+"<<endl;
 }
 void displayGameX(int * n) {
-    cout << "+------------------------------------------------------+" << endl;
-    cout << "| 0   1   2   3   4   5  |BAR|  6   7   8   9  10  11  |" << endl;
-
-    int row = 0;
+    cout << "+------------------------------------------------------+"<<endl;
+    cout << "| 0   1   2   3   4   5  |BAR|  6  7   8   9  10   11   |"<<endl;
+    int row =0;
     int max = 0;
     for (int j = 0; j < 12; j++) {
-        if (abs(n[j]) > max) {
+        if (abs(n[j])> max) {
             max = abs(n[j]);
         }
     }
-
     do {
         cout << "|";
         row++;
         for (int i = 0; i < 12; i++) {
-            if (abs(n[i]) >= row) {
+            if (abs(n[i]) >= row ) {
                 if (n[i] < 0) {
                     cout << " x  ";
-                } else {
+                }else {
                     cout << " o  ";
                 }
-            } else {
+            }else {
                 cout << "    ";
             }
-            if (i == 5) {
+            if (i == 5 || i ==18) {
                 cout << "|   |";
             }
         }
         cout << " |" << endl;
-    } while (row < max + 2);
+    }while (row < max+2);
 
     max = 0;
-    for (int j = 12; j < 24; j++) {
-        if (abs(n[j]) > max) {
+    for (int j = 12; j < 23; j++) {
+        if (abs(n[j])> max) {
             max = abs(n[j]);
         }
     }
-
     row = max;
     do {
         cout << "|";
-        for (int i = 23; i >= 12; i--) {
+        for (int i = 23; i > 11; i--) {
             if (abs(n[i]) >= row) {
                 if (n[i] < 0) {
                     cout << " x  ";
-                } else {
+                }else {
                     cout << " o  ";
                 }
-            } else {
+            }else {
                 cout << "    ";
             }
-            if (i == 18) {
+            if (i == 18 || i ==5) {
                 cout << "|   |";
             }
         }
         cout << " |" << endl;
         row--;
-    } while (row != 0);
-
-    cout << "| 23  22  21  20  19  18 |BAR| 17  16  15  14  13  12  |" << endl;
-    cout << "+------------------------------------------------------+" << endl;
+    }while (row != 0);
+    cout << "| 23  22  21  20  19  18 |BAR| 17  16  15  14  13  12  |"<<endl;
+    cout << "+------------------------------------------------------+"<<endl;
 }
-
