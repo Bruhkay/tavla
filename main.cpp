@@ -46,12 +46,12 @@ void gameLoop(int *n) {
             if (choice == 'r' || choice == 'R') {
                 initializeGame(n);
                 return;
-            } else if (choice == 'q' || choice == 'Q') {
+            }
+            if (choice == 'q' || choice == 'Q') {
                 isGameFinished = true;
                 return;
-            } else {
-                cout << "Invalid input. Press R to restart or Q to quit: ";
             }
+            cout << "Invalid input. Press R to restart or Q to quit: ";
         }
     }
 
@@ -87,7 +87,7 @@ void gameLoop(int *n) {
             if (firstPlayer) {
                 if ((firstPlayersHand != 0 && n[24 - movementAmount] >= -1 && movement == -1) ||
                     (firstPlayersHand == 0 && movement >= 0 && movement < 24 && n[movement] > 0 &&
-                     movementAmount > 0 && ((movement >= movementAmount ) || firstPlayerReady == true) &&
+                     movementAmount > 0 && (movement >= movementAmount  || firstPlayerReady) &&
                      (movementAmount == dice1 || movementAmount == dice2))) {
                     if (firstPlayersHand == 0 && n[movement - movementAmount] >= -1) {
                         trueStone = true;
@@ -96,9 +96,11 @@ void gameLoop(int *n) {
             } else {
                 if ((secondPlayersHand != 0 && n[movementAmount] <= 1 && movement == -1) ||
                     (secondPlayersHand == 0 && movement >= 0 && movement < 24 && n[movement] < 0 &&
-                     movementAmount > 0 && movement + movementAmount < 24 && n[movement + movementAmount] <= 1 &&
+                     movementAmount > 0 && (movement + movementAmount < 24 || secondPlayerReady)&&
                      (movementAmount == dice1 || movementAmount == dice2))) {
-                    trueStone = true;
+                    if (secondPlayersHand == 0 && n[movement + movementAmount] <= 1 ) {
+                        trueStone = true;
+                    }
                 }
             }
 
@@ -140,13 +142,12 @@ void initializeGame(int *n) {
     for (int i = 0; i < 24; i++) {
         n[i] = 0;
     }
-    //n[23] = 2;
-    //n[12] = 5;
+    n[23] = 2;
+    n[12] = 5;
     n[18] = -5;
     n[16] = -3;
     n[11] = -5;
-    //n[7] = 3;
-    n[7]=1;
+    n[7] = 3;
     n[5] = 5;
     n[0] = -2;
     firstPlayer = true;
