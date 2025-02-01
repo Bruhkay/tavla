@@ -79,6 +79,12 @@ void gameLoop(int *n) {
             cin >> movementAmount;
             if (movementAmount == -1) {
                 cout << "Passed turn." << endl;
+                if (firstPlayer) {
+                    displayGameX(n);
+                }
+                if (!firstPlayer) {
+                    displayGameO(n);
+                }
                 firstPlayer = !firstPlayer;
                 return;
             }
@@ -268,10 +274,11 @@ void displayGameO(int * n) {
         }
         cout << " |" << endl;
         row--;
-    }while (row != 0);
+    }while (row > 0);
     cout << "| 12  11  10  9   8   7  |BAR| 6   5   4   3   2   1   |"<<endl;
     cout << "+------------------------------------------------------+"<<endl;
 }
+
 void displayGameX(int * n) {
     cout << "+------------------------------------------------------+"<<endl;
     cout << "| 12  11  10  9   8   7  |BAR| 6   5   4   3   2   1   |"<<endl;
@@ -327,7 +334,7 @@ void displayGameX(int * n) {
         }
         cout << " |" << endl;
         row--;
-    }while (row != 0);
+    }while (row > 0 );
     cout << "| 13  14  15  16  17  18 |BAR| 19  20  21  22  23  24  |"<<endl;
     cout << "+------------------------------------------------------+"<<endl;
 }
