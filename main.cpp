@@ -36,7 +36,7 @@ void gameLoop(int *n) {
     }
 
     if (isGameOver1 || isGameOver2) {
-        cout << "Game Over. " << (isGameOver1 ? "Player 1 won!!!" : "Player 2 won!!!") << endl;
+        cout << endl<< endl<< "Game Over. " << (isGameOver1 ? "Player 1 won!!!" : "Player 2 won!!!") << endl;
         cout << "Press R to restart or Q to quit: ";
         char choice;
         while (true) {
@@ -93,9 +93,11 @@ void gameLoop(int *n) {
             }
 
             if (firstPlayer) {
-                if (firstPlayersHand != 0 && n[24 - movementAmount] >= -1 && movement == -1)
+                if (firstPlayersHand != 0 && n[24 - movementAmount] >= -1 && movement == -2)
                     trueStone = true;
-                if ((firstPlayersHand != 0 && n[24 - movementAmount] >= -1 && movement == -1) ||
+                cout << n[24 - movementAmount] << " test " << movement << endl;
+                cout << firstPlayersHand << " test2 "<< endl;
+                if ((firstPlayersHand != 0 && n[24 - movementAmount] >= -1 && movement == -2) ||
                     (firstPlayersHand == 0 && movement >= 0 && movement < 24 && n[movement] > 0 &&
                      movementAmount > 0 && (movement >= movementAmount  || firstPlayerReady) &&
                      (movementAmount == dice1 || movementAmount == dice2))) {
@@ -104,9 +106,9 @@ void gameLoop(int *n) {
                     }
                 }
             } else {
-                if (secondPlayersHand != 0 && n[movementAmount] >= -1 && movement == -1)
+                if (secondPlayersHand != 0 && n[movementAmount-1] <= 1 && movement == -2)
                     trueStone = true;
-                if ((secondPlayersHand != 0 && n[movementAmount] <= 1 && movement == -1) ||
+                if ((secondPlayersHand != 0 && n[movementAmount-1] <= 1 && movement == -2) ||
                     (secondPlayersHand == 0 && movement >= 0 && movement < 24 && n[movement] < 0 &&
                      movementAmount > 0 && (movement + movementAmount < 24 || secondPlayerReady)&&
                      (movementAmount == dice1 || movementAmount == dice2))) {
@@ -123,7 +125,7 @@ void gameLoop(int *n) {
 
         if (firstPlayer) {
             if (!firstPlayerReady) {
-                if (firstPlayersHand ==0 && movement != -1) {
+                if (firstPlayersHand ==0 && movement != -2) {
                     n[movement]--;
                     if (n[movement - movementAmount] == -1) {
                         secondPlayersHand++;
@@ -150,7 +152,7 @@ void gameLoop(int *n) {
             }
         } else { // second player
             if (!secondPlayerReady) {
-                if (secondPlayersHand == 0 && movement != -1) {
+                if (secondPlayersHand == 0 && movement != -2) {
                     n[movement]++;
                     if (n[movement + movementAmount] == 1) {
                         firstPlayersHand++;
@@ -159,7 +161,7 @@ void gameLoop(int *n) {
                         n[movement + movementAmount]--;
                     }
                 }
-                else if (secondPlayersHand != 0 && movement == -1){
+                else if (secondPlayersHand != 0 && movement == -2){
                     secondPlayersHand--;
                     if (n[movementAmount-1] == 1) {
                         firstPlayersHand++;
