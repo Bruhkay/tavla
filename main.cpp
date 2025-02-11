@@ -237,9 +237,9 @@ void displayGameO(int * n) {
         for (int i = 12; i < 24; i++) {
             if (abs(n[i]) >= row ) {
                 if (n[i] < 0) {
-                    cout << " x  ";
+                    cout << " ○  ";
                 }else {
-                    cout << " o  ";
+                    cout << " ●  ";
                 }
             }else {
                 cout << "    ";
@@ -263,9 +263,9 @@ void displayGameO(int * n) {
         for (int i = 11; i > -1; i--) {
             if (abs(n[i]) >= row) {
                 if (n[i] < 0) {
-                    cout << " x  ";
+                    cout << " ○  ";
                 }else {
-                    cout << " o  ";
+                    cout << " ●  ";
                 }
             }else {
                 cout << "    ";
@@ -297,9 +297,9 @@ void displayGameX(int * n) {
         for (int i = 11; i >-1; i--) {
             if (abs(n[i]) >= row ) {
                 if (n[i] < 0) {
-                    cout << " x  ";
+                    cout << " ○  ";
                 }else {
-                    cout << " o  ";
+                    cout << " ●  ";
                 }
             }else {
                 cout << "    ";
@@ -323,9 +323,9 @@ void displayGameX(int * n) {
         for (int i = 12; i <24 ; i++) {
             if (abs(n[i]) >= row) {
                 if (n[i] < 0) {
-                    cout << " x  ";
+                    cout << " ○  ";
                 }else {
-                    cout << " o  ";
+                    cout << " ●  ";
                 }
             }else {
                 cout << "    ";
