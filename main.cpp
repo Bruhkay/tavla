@@ -67,10 +67,10 @@ void gameLoop(int *n) {
         do {
             if (firstPlayer)
                 if (firstPlayersHand != 0)
-                    cout << "Warning!! There is " <<  firstPlayersHand << " rock at stack of O"<< endl;
+                    cout << "Warning!! There is " <<  firstPlayersHand << " rock at stack of ○"<< endl;
             if (!firstPlayer)
                 if (secondPlayersHand != 0)
-                    cout << "Warning!! There is " <<  secondPlayersHand << " rock at stack of X"<< endl;
+                    cout << "Warning!! There is " <<  secondPlayersHand << " rock at stack of ●"<< endl;
 
             cout << "Enter movement (-1 to use stack): ";
             cin >> movement;
