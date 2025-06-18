@@ -144,7 +144,9 @@ void gameLoop(int *n) {
                         secondPlayersHand++;
                         n[24 - movementAmount] = 1;
                     } else {
-                        n[24 - movementAmount]++;
+                        if (movementAmount < 25 && movementAmount > 18 ) {
+                            n[movementAmount-1]++;
+                        }
                     }
                 }
             }
@@ -171,7 +173,9 @@ void gameLoop(int *n) {
                         firstPlayersHand++;
                         n[movementAmount-1] = -1;
                     } else {
-                        n[movementAmount-1]--;
+                        if (movementAmount < 25 && movementAmount > 18 ) {
+                            n[movementAmount-1]--;
+                        }
                     }
                 }
             }
