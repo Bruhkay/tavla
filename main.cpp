@@ -58,7 +58,7 @@ void gameLoop(int *n) {
     int dice2 = (rand() % 6) + 1;
     int coef = (dice1 == dice2) ? 2 : 1;
 
-    cout << (firstPlayer ? "○" : "●") << "'s turn: " << endl;
+    cout << (firstPlayer ? "●" : "○") << "'s turn: " << endl;
     cout << "Rolled Dice: " << dice1 << " " << dice2 << endl;
 
     for (int l = 0; l < coef * 2; l++) {
